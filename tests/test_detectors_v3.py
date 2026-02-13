@@ -57,7 +57,6 @@ class TestRunAllDetectors:
             sid for sid, f in findings.items()
             if f["overall_severity"] == "urgent"
         ]
-        # Debe detectar al menos algunas fuentes urgentes
         assert len(urgent_sources) >= 1, "Sept 8 should have at least 1 urgent source"
 
     def test_sept_8_structure(self):
@@ -74,7 +73,7 @@ class TestRunAllDetectors:
         """Sept 9 (Martes) debe tener hallazgos."""
         findings = run_all_detectors("2025-09-09")
         total_incidents = sum(len(f["incidents"]) for f in findings.values())
-        assert total_incidents >= 0  # Puede tener o no, pero no debe crashear
+        assert total_incidents >= 0
 
     def test_sept_10_has_findings(self):
         """Sept 10 (Miércoles) debe tener hallazgos."""
@@ -99,6 +98,8 @@ class TestRunAllDetectors:
 
 # =============================================================================
 # TEST SUITE 2: Detectores Individuales
+# Nota: cada detector recibe (source_id, execution_date) y retorna un dict
+#       con keys: source_id, detector, incidents (lista de incidencias)
 # =============================================================================
 
 class TestMissingFileDetector:
@@ -106,15 +107,13 @@ class TestMissingFileDetector:
 
     def test_wupay_monday_missing(self):
         """
-        WuPay sources (228036, 228038, 239611, 239613) normalmente operan
-        Lun-Vie. Sept 8 es lunes, deberían tener archivos.
+        WuPay sources (228036) normalmente operan Lun-Vie.
+        Sept 8 es lunes, debería detectar archivos faltantes.
         """
-        cv = parse_cv("228036")
-        today = load_today_files("228036", "2025-09-08")
-        last_week = load_last_weekday_files("228036", "2025-09-08")
-        incidents = detect_missing_files(cv, today, last_week)
-        # Puede detectar o no dependiendo de los datos, pero no debe crashear
-        assert isinstance(incidents, list)
+        result = detect_missing_files("228036", "2025-09-08")
+        assert isinstance(result, dict)
+        assert "incidents" in result
+        assert isinstance(result["incidents"], list)
 
     def test_settlement_sunday_no_missing(self):
         """
@@ -122,42 +121,36 @@ class TestMissingFileDetector:
         0 archivos un domingo NO es missing files.
         """
         cv = parse_cv("195385")
-        # Sept 7 es domingo (no tenemos datos, pero podemos verificar la lógica del CV)
         sunday_expected = cv["file_patterns"].get("Sun", {}).get("mean_files", 0)
         assert sunday_expected == 0, "Sunday should expect 0 files — not a missing file"
 
-    def test_returns_list_of_dicts(self):
-        """El detector debe retornar una lista de dicts con estructura correcta."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_missing_files(cv, today, last_week)
-        assert isinstance(incidents, list)
-        for inc in incidents:
+    def test_returns_dict_with_incidents(self):
+        """El detector debe retornar un dict con estructura correcta."""
+        result = detect_missing_files("195385", "2025-09-09")
+        assert isinstance(result, dict)
+        assert "source_id" in result
+        assert "detector" in result
+        assert "incidents" in result
+        assert result["detector"] == "missing_file"
+        for inc in result["incidents"]:
             assert "type" in inc
             assert "severity" in inc
-            assert "description" in inc
 
 
 class TestDuplicatedFailedDetector:
     """Tests para el detector de duplicados y fallos."""
 
-    def test_returns_list(self):
-        """Debe retornar una lista."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_duplicated_failed(cv, today, last_week)
-        assert isinstance(incidents, list)
+    def test_returns_dict(self):
+        """Debe retornar un dict con estructura correcta."""
+        result = detect_duplicated_failed("195385", "2025-09-09")
+        assert isinstance(result, dict)
+        assert "incidents" in result
+        assert result["detector"] == "duplicated_failed"
 
     def test_detects_duplicated_flag(self):
         """Si hay archivos con is_duplicated=true, debe detectarlos."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_duplicated_failed(cv, today, last_week)
-        # Verificar que el detector revisa los flags correctamente
-        for inc in incidents:
+        result = detect_duplicated_failed("195385", "2025-09-09")
+        for inc in result["incidents"]:
             assert inc["type"] in ("duplicated_file", "failed_file")
 
 
@@ -169,14 +162,9 @@ class TestUnexpectedEmptyDetector:
         MyPal_DBR RX (195436) tiene ~83% vacíos los lunes.
         Un vacío el lunes NO debería ser incidencia.
         """
-        cv = parse_cv("195436")
-        today = load_today_files("195436", "2025-09-08")  # Lunes
-        last_week = load_last_weekday_files("195436", "2025-09-08")
-        incidents = detect_unexpected_empty(cv, today, last_week)
-        # No debería reportar incidencia de vacíos para esta fuente un lunes
-        empty_incidents = [i for i in incidents if i["type"] == "unexpected_empty"]
-        # Si hay vacíos, el detector debería reconocer que es normal
-        assert isinstance(incidents, list)
+        result = detect_unexpected_empty("195436", "2025-09-08")
+        assert isinstance(result, dict)
+        assert isinstance(result["incidents"], list)
 
     def test_desco_devolucoes_empty_is_anomaly(self):
         """
@@ -185,7 +173,6 @@ class TestUnexpectedEmptyDetector:
         """
         cv = parse_cv("211544")
         status = cv.get("processing_status", {})
-        # Verificar que el CV indica 0% vacíos
         if "processed" in status:
             assert status["processed"]["percentage"] >= 95.0
 
@@ -193,67 +180,61 @@ class TestUnexpectedEmptyDetector:
 class TestVolumeVariationDetector:
     """Tests para el detector de variaciones de volumen."""
 
-    def test_returns_list(self):
-        """Debe retornar una lista."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_volume_variation(cv, today, last_week)
-        assert isinstance(incidents, list)
+    def test_returns_dict(self):
+        """Debe retornar un dict con estructura correcta."""
+        result = detect_volume_variation("195385", "2025-09-09")
+        assert isinstance(result, dict)
+        assert "incidents" in result
+        assert result["detector"] == "volume_variation"
 
-    def test_zero_volume_is_urgent(self):
+    def test_wupay_monday_zero_is_urgent(self):
         """
-        Si una fuente que normalmente tiene miles de registros tiene 0,
-        debe ser urgente.
+        WuPay (228036) un lunes con 0 records debería ser urgente
+        (normalmente tiene ~612K records).
         """
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_volume_variation(cv, today, last_week)
-        for inc in incidents:
-            if "ZERO" in inc.get("description", "").upper() or "0 records" in inc.get("description", ""):
-                assert inc["severity"] == "urgent"
+        result = detect_volume_variation("228036", "2025-09-08")
+        urgent_incidents = [i for i in result["incidents"] if i["severity"] == "urgent"]
+        assert len(urgent_incidents) >= 1, "WuPay with 0 records should be urgent"
+
+    def test_mypal_monday_zero_is_normal(self):
+        """
+        MyPal_DBR RX (195436) un lunes con 0 records NO debería ser urgente
+        (83% de los lunes son vacíos, median = 0).
+        """
+        result = detect_volume_variation("195436", "2025-09-08")
+        urgent_incidents = [i for i in result["incidents"] if i["severity"] == "urgent"]
+        assert len(urgent_incidents) == 0, "MyPal Monday 0 records is NORMAL, should not be urgent"
 
 
 class TestLateUploadDetector:
     """Tests para el detector de uploads tardíos."""
 
-    def test_returns_list(self):
-        """Debe retornar una lista."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_late_upload(cv, today, last_week)
-        assert isinstance(incidents, list)
+    def test_returns_dict(self):
+        """Debe retornar un dict con estructura correcta."""
+        result = detect_late_upload("195385", "2025-09-09")
+        assert isinstance(result, dict)
+        assert "incidents" in result
 
     def test_late_upload_never_urgent(self):
         """Late uploads NUNCA deben ser urgentes (max: attention)."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_late_upload(cv, today, last_week)
-        for inc in incidents:
+        result = detect_late_upload("195385", "2025-09-09")
+        for inc in result["incidents"]:
             assert inc["severity"] != "urgent", "Late uploads should never be urgent"
 
 
 class TestPreviousPeriodDetector:
     """Tests para el detector de archivos de periodo anterior."""
 
-    def test_returns_list(self):
-        """Debe retornar una lista."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_previous_period(cv, today, last_week)
-        assert isinstance(incidents, list)
+    def test_returns_dict(self):
+        """Debe retornar un dict con estructura correcta."""
+        result = detect_previous_period("195385", "2025-09-09")
+        assert isinstance(result, dict)
+        assert "incidents" in result
 
     def test_previous_period_never_urgent(self):
         """Previous period files NUNCA deben ser urgentes."""
-        cv = parse_cv("195385")
-        today = load_today_files("195385", "2025-09-09")
-        last_week = load_last_weekday_files("195385", "2025-09-09")
-        incidents = detect_previous_period(cv, today, last_week)
-        for inc in incidents:
+        result = detect_previous_period("195385", "2025-09-09")
+        for inc in result["incidents"]:
             assert inc["severity"] != "urgent", "Previous period should never be urgent"
 
 
@@ -274,7 +255,6 @@ class TestGroundTruthAlignment:
         """
         findings = run_all_detectors("2025-09-08")
         src_220505 = findings.get("220505", {})
-        # Debe tener al menos una incidencia
         assert len(src_220505.get("incidents", [])) >= 1 or \
                src_220505.get("overall_severity") in ("urgent", "attention"), \
                "220505 should be flagged on Sept 8"
