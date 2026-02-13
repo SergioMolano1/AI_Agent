@@ -1,0 +1,1 @@
+from .templates import REPORT_CONSOLIDATOR_PROMPT
