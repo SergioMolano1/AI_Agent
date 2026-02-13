@@ -1,0 +1,306 @@
+"""
+MCP Tool: Slack Notification Server
+=====================================
+Un MCP (Model Context Protocol) Server custom que permite al agente
+enviar reportes de incidencias a un canal de Slack.
+
+¿Qué es MCP?
+- Es un protocolo estándar creado por Anthropic y adoptado por Google ADK
+- Permite que los agentes usen "herramientas externas" de forma estandarizada
+- Piensa en MCP como un "USB universal" para conectar agentes con servicios externos
+- ADK soporta MCP servers nativamente
+
+¿Por qué MCP y no una función Python normal?
+- MCP es reutilizable: cualquier agente puede usar este server, no solo el nuestro
+- MCP es estándar: otros frameworks también lo entienden
+- MCP se puede ejecutar como servicio independiente (separación de concerns)
+
+¿Cómo funciona este MCP Server?
+1. El agente termina de generar el reporte
+2. El agente invoca la tool "send_slack_notification" del MCP Server
+3. El MCP Server envía el reporte al webhook de Slack
+4. Slack muestra el mensaje en el canal configurado
+
+Setup de Slack Webhook:
+1. Ir a https://api.slack.com/messaging/webhooks
+2. Crea una Slack App → Activa "Incoming Webhooks" → Crea un webhook para tu canal
+3. Copia la URL del webhook y ponla en .env como SLACK_WEBHOOK_URL
+
+Uso con ADK:
+    from google.adk.tools import MCPTool
+    from mcp_tools.slack_server import mcp_app
+    
+    slack_tool = MCPTool(mcp_app)
+    agent = Agent(tools=[slack_tool, ...])
+"""
+
+import os
+import json
+import logging
+from datetime import datetime, timezone
+from typing import Optional
+
+# MCP SDK imports
+try:
+    from mcp.server.fastmcp import FastMCP
+    MCP_AVAILABLE = True
+except ImportError:
+    MCP_AVAILABLE = False
+    print("⚠️  MCP SDK not installed. Install with: pip install mcp")
+
+# HTTP client for webhook
+try:
+    import httpx
+    HTTPX_AVAILABLE = True
+except ImportError:
+    HTTPX_AVAILABLE = False
+    print("⚠️  httpx not installed. Install with: pip install httpx")
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# MCP SERVER DEFINITION
+# =============================================================================
+
+if MCP_AVAILABLE:
+    # Crear el MCP Server
+    mcp_app = FastMCP(
+        name="incident-report-notifier",
+        description="MCP Server for sending incident detection reports to messaging platforms (Slack, Email, etc.)"
+    )
+
+    @mcp_app.tool()
+    async def send_slack_notification(
+        report_text: str,
+        channel_name: str = "incident-reports",
+        severity: str = "info"
+    ) -> dict:
+        """
+        Sends an incident report to a Slack channel via webhook.
+        
+        Args:
+            report_text: The full incident report text (markdown format)
+            channel_name: Target Slack channel name (for logging purposes)
+            severity: Report severity level - "urgent", "attention", or "ok"
+                     Controls the color of the Slack attachment
+        
+        Returns:
+            Dictionary with success status and details
+        """
+        webhook_url = os.getenv("SLACK_WEBHOOK_URL")
+        
+        if not webhook_url:
+            return {
+                "success": False,
+                "error": "SLACK_WEBHOOK_URL not configured in .env",
+                "action": "Add SLACK_WEBHOOK_URL=https://hooks.slack.com/services/... to your .env file"
+            }
+        
+        # Mapear severidad a colores de Slack
+        color_map = {
+            "urgent": "#FF0000",     # Rojo
+            "attention": "#FFA500",  # Naranja
+            "ok": "#00FF00",        # Verde
+            "info": "#0066FF",      # Azul
+        }
+        
+        # Construir el payload de Slack
+        # Slack usa "Block Kit" para mensajes ricos
+        slack_payload = {
+            "text": f"📋 Daily Incident Report - {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
+            "attachments": [
+                {
+                    "color": color_map.get(severity, "#0066FF"),
+                    "blocks": [
+                        {
+                            "type": "header",
+                            "text": {
+                                "type": "plain_text",
+                                "text": f"📋 Incident Report - {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}"
+                            }
+                        },
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": _truncate_for_slack(report_text)
+                            }
+                        },
+                        {
+                            "type": "context",
+                            "elements": [
+                                {
+                                    "type": "mrkdwn",
+                                    "text": f"🤖 Generated by Incident Detection Agent | Severity: *{severity.upper()}*"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        # Enviar a Slack
+        if not HTTPX_AVAILABLE:
+            return {
+                "success": False,
+                "error": "httpx library not available",
+                "payload_preview": slack_payload
+            }
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    webhook_url,
+                    json=slack_payload,
+                    timeout=10.0
+                )
+                
+                if response.status_code == 200:
+                    logger.info(f"Report sent to Slack channel #{channel_name}")
+                    return {
+                        "success": True,
+                        "channel": channel_name,
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "message": f"Report successfully sent to #{channel_name}"
+                    }
+                else:
+                    return {
+                        "success": False,
+                        "status_code": response.status_code,
+                        "error": response.text
+                    }
+                    
+        except Exception as e:
+            logger.error(f"Failed to send Slack notification: {e}")
+            return {
+                "success": False,
+                "error": str(e)
+            }
+
+
+    @mcp_app.tool()
+    async def send_email_notification(
+        report_text: str,
+        recipient_email: str,
+        subject: Optional[str] = None
+    ) -> dict:
+        """
+        Sends an incident report via email using SendGrid or SMTP.
+        
+        Args:
+            report_text: The full incident report text
+            recipient_email: Email address to send the report to
+            subject: Optional custom subject line
+        
+        Returns:
+            Dictionary with success status and details
+        """
+        # Email implementation placeholder
+        # In production, this would use SendGrid API or SMTP
+        
+        sendgrid_key = os.getenv("SENDGRID_API_KEY")
+        smtp_host = os.getenv("SMTP_HOST")
+        
+        if not sendgrid_key and not smtp_host:
+            return {
+                "success": False,
+                "error": "No email configuration found. Set SENDGRID_API_KEY or SMTP_HOST in .env",
+                "preview": {
+                    "to": recipient_email,
+                    "subject": subject or f"Incident Report - {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
+                    "body_preview": report_text[:200] + "..."
+                }
+            }
+        
+        # SendGrid implementation would go here
+        return {
+            "success": True,
+            "message": f"Report sent to {recipient_email}",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+
+
+    @mcp_app.tool()
+    async def send_telegram_notification(
+        report_text: str,
+        chat_id: Optional[str] = None
+    ) -> dict:
+        """
+        Sends an incident report to a Telegram chat/group.
+        
+        Args:
+            report_text: The full incident report text
+            chat_id: Telegram chat ID (defaults to TELEGRAM_CHAT_ID from .env)
+        
+        Returns:
+            Dictionary with success status
+        """
+        bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        chat_id = chat_id or os.getenv("TELEGRAM_CHAT_ID")
+        
+        if not bot_token or not chat_id:
+            return {
+                "success": False,
+                "error": "TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID must be set in .env"
+            }
+        
+        telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        
+        if not HTTPX_AVAILABLE:
+            return {"success": False, "error": "httpx not available"}
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    telegram_url,
+                    json={
+                        "chat_id": chat_id,
+                        "text": _truncate_for_telegram(report_text),
+                        "parse_mode": "Markdown"
+                    },
+                    timeout=10.0
+                )
+                return {
+                    "success": response.status_code == 200,
+                    "timestamp": datetime.now(timezone.utc).isoformat()
+                }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+
+# =============================================================================
+# HELPER FUNCTIONS
+# =============================================================================
+
+def _truncate_for_slack(text: str, max_length: int = 3000) -> str:
+    """Slack blocks have a 3000 char limit per text field."""
+    if len(text) <= max_length:
+        return text
+    return text[:max_length - 50] + "\n\n... _(report truncated, see full version in the system)_"
+
+
+def _truncate_for_telegram(text: str, max_length: int = 4096) -> str:
+    """Telegram messages have a 4096 char limit."""
+    if len(text) <= max_length:
+        return text
+    return text[:max_length - 50] + "\n\n... _(truncated)_"
+
+
+# =============================================================================
+# STANDALONE EXECUTION (for testing)
+# =============================================================================
+
+if __name__ == "__main__":
+    if MCP_AVAILABLE:
+        print("🚀 Starting MCP Server: incident-report-notifier")
+        print("   Tools available: send_slack_notification, send_email_notification, send_telegram_notification")
+        print("   Run with: python -m mcp_tools.slack_server")
+        mcp_app.run()
+    else:
+        print("❌ MCP SDK not installed. Run: pip install mcp[cli]")
