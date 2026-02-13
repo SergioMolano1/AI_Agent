@@ -276,6 +276,8 @@ Consultar `docs/challenges_and_lessons.md` para el detalle completo. Resumen:
 4. **LLM para reporte**: Sintetizar, priorizar y redactar sí requiere inteligencia lingüística
 5. **Versionamiento por carpetas**: Permite comparar lado a lado sin perder historial
 
+Consultar `docs/images/` para el diagrama visual de la arquitectura.
+
 ---
 
 ## Stack Tecnológico
