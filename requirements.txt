@@ -1,0 +1,24 @@
+# Google ADK - Agent Development Kit
+google-adk>=1.5.0
+
+# Google AI
+google-genai>=1.14.0
+
+# Data processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Date handling
+python-dateutil>=2.8.0
+
+# Testing
+pytest>=8.0.0
+
+# HTTP client (for MCP notifications)
+httpx>=0.27.0
+
+# MCP Tools (optional - requires Python 3.10+)
+# Install separately if needed: pip install mcp>=1.0.0

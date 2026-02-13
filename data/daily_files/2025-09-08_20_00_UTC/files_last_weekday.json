@@ -1,0 +1,432 @@
+{
+    "195385": [
+        {
+            "filename": "QNRrVFIeCYcEM4Q__BR_Shop_settlement_detail_report_batch_1081_20250901.csv",
+            "rows": 2,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.0009412765502929688,
+            "uploaded_at": "2025-09-01T08:09:04.885995+00:00",
+            "status_message": null
+        }
+    ],
+    "195436": [
+        {
+            "filename": "00000RX-TA8APPQAGZJQS-DBR-DISBURSEMENT_TRANSACTION-20250831-1-1-20250831000000.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T15:07:36.423446+00:00",
+            "status_message": null
+        }
+    ],
+    "195439": [
+        {
+            "filename": "activity_report_bc5nbnhgs8zg5z7t_2025-08-29.csv",
+            "rows": 313425,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 56.125802993774414,
+            "uploaded_at": "2025-09-01T02:32:59.942588+00:00",
+            "status_message": null
+        }
+    ],
+    "199944": [
+        {
+            "filename": "2_Soop_CPIX_20250831_M___PIX_78AFAE04362B40899DAEE1B6EF3624D7_14380200000121_0000.csv",
+            "rows": 105565,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 18.34317970275879,
+            "uploaded_at": "2025-09-01T11:33:02.791139+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "2_Soop_CPIX_20250831_M___BANKING_01d5661eada741ea839371b48bb2c7da_19468242000132_0000.csv",
+            "rows": 53090,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 9.366937637329102,
+            "uploaded_at": "2025-09-01T11:33:01.698630+00:00",
+            "status_message": null
+        }
+    ],
+    "207936": [
+        {
+            "filename": "2_Soop_CONC_20250831_M___POS_MARKETPLACE_5B25A3F571D6400082B1E5E228A3E401_14380200000121_0000.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T11:33:04.859395+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "2_Soop_CONC_20250831_M___PAGO_688B810A3E464D27B9E8AAE31C02CE91_02599377000134_0000.csv",
+            "rows": 4312,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.879176139831543,
+            "uploaded_at": "2025-09-01T11:33:03.778964+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "2_Soop_CONC_20250831_M__SHOP_MARKETPLACE_046F9EC9F801495790B8182D16D66C6A_14380200000121_0000.csv",
+            "rows": 34,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.006649971008300781,
+            "uploaded_at": "2025-09-01T11:33:02.692059+00:00",
+            "status_message": null
+        }
+    ],
+    "207938": [
+        {
+            "filename": "3_Soop_CONC_20250831_M___POS_MARKETPLACE_5B25A3F571D6400082B1E5E228A3E401_14380200000121_0000.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T12:03:01.667555+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "3_Soop_CONC_20250831_M___PAGO_688B810A3E464D27B9E8AAE31C02CE91_02599377000134_0000.csv",
+            "rows": 4323,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.6887950897216797,
+            "uploaded_at": "2025-09-01T12:03:00.586125+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "3_Soop_CONC_20250831_M__SHOP_MARKETPLACE_046F9EC9F801495790B8182D16D66C6A_14380200000121_0000.csv",
+            "rows": 35,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.0058727264404296875,
+            "uploaded_at": "2025-09-01T12:02:59.506222+00:00",
+            "status_message": null
+        }
+    ],
+    "209773": [
+        {
+            "filename": "DescoPixrecebimentos_2025-08-31.csv",
+            "rows": 164040,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 29.848721504211426,
+            "uploaded_at": "2025-09-01T15:12:23.382975+00:00",
+            "status_message": null
+        }
+    ],
+    "211544": [
+        {
+            "filename": "DescoDevoluciones_2025-08-31.csv",
+            "rows": 5238,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 1.0050601959228516,
+            "uploaded_at": "2025-09-01T15:08:02.233322+00:00",
+            "status_message": null
+        }
+    ],
+    "220504": [
+        {
+            "filename": "QNNoGEiMCYcEUAA__BR_Saipos_payments_accounting_report_2025_08_31.csv",
+            "rows": 52,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.019174575805664062,
+            "uploaded_at": "2025-09-01T08:12:43.455188+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNNoEEqjCYcEZAg__BR_Anotaai_Wallet_payments_accounting_report_2025_08_31.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T08:12:42.375167+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNNoAH54CYcEaMA__BR_safemode_payments_accounting_report_2025_08_31.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T08:12:41.284253+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNNn-FTgCYcECzw__BR_DataOnly_payments_accounting_report_2025_08_31.csv",
+            "rows": 1713760,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 716.2538557052612,
+            "uploaded_at": "2025-09-01T08:12:40.200769+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJ0FjlCYcEuOA__BR_CBK_payments_accounting_report_2025_08_31.csv",
+            "rows": 8,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.0028200149536132812,
+            "uploaded_at": "2025-09-01T08:12:39.122201+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJyFC8iYcEhrw__BR_WhiteLabel_payments_accounting_report_2025_08_31.csv",
+            "rows": 3,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.0030279159545898438,
+            "uploaded_at": "2025-09-01T08:12:38.035901+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJwHlzCYcESww__BR_Shop_payments_accounting_report_2025_08_31.csv",
+            "rows": 350,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.1504364013671875,
+            "uploaded_at": "2025-09-01T08:12:36.952051+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJYFe5CYcEMJQ__BR_PwGoogle_payments_accounting_report_2025_08_31.csv",
+            "rows": 420179,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 282.12397384643555,
+            "uploaded_at": "2025-09-01T08:12:35.877320+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJpGbvCYcEV9w__BR_POC_payments_accounting_report_2025_08_31.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T08:12:34.791639+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJgEdqCYcEDSA__BR_Market_payments_accounting_report_2025_08_31.csv",
+            "rows": 7433,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 3.7218942642211914,
+            "uploaded_at": "2025-09-01T08:12:33.709145+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJjE2oiYcEa-g__BR_Innovation_payments_accounting_report_2025_08_31.csv",
+            "rows": 0,
+            "status": "empty",
+            "is_duplicated": false,
+            "file_size": null,
+            "uploaded_at": "2025-09-01T08:12:32.630896+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJlHkHiYcEhWA__BR_Donation_payments_accounting_report_2025_08_31.csv",
+            "rows": 189320,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 100.70360851287842,
+            "uploaded_at": "2025-09-01T08:12:31.543833+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJnHHGiYcEhgA__BR_Beneficios_payments_accounting_report_2025_08_31.csv",
+            "rows": 20,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.006220817565917969,
+            "uploaded_at": "2025-09-01T08:12:30.452028+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJaEAniYcEL2A__BR_ApplePay_payments_accounting_report_2025_08_31.csv",
+            "rows": 1111120,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 845.2694120407104,
+            "uploaded_at": "2025-09-01T08:12:29.374169+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJuEjciYcEctA__BR_Anota-ai_payments_accounting_report_2025_08_31.csv",
+            "rows": 3292,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 1.130549430847168,
+            "uploaded_at": "2025-09-01T08:12:28.283652+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJiGmFiYcEE2A__BR_AddCard_payments_accounting_report_2025_08_31.csv",
+            "rows": 184412,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 45.26219654083252,
+            "uploaded_at": "2025-09-01T08:12:27.197633+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJVEllCYcETaw__BR_payments_accounting_report_2025_08_31.csv",
+            "rows": 4091019,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 1693.0702772140503,
+            "uploaded_at": "2025-09-01T08:12:26.120486+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJsG6aiYcEtdQ___Clube_payments_accounting_report_2025_08_31.csv",
+            "rows": 1397529,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 589.7347326278687,
+            "uploaded_at": "2025-09-01T08:12:25.029744+00:00",
+            "status_message": null
+        }
+    ],
+    "220505": [
+        {
+            "filename": "QNVJrEPaiYcEkcQ__BR_MVP_payments_accounting_report_2025_08_31.csv",
+            "rows": 525930,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 261.83353900909424,
+            "uploaded_at": "2025-09-01T08:05:55.275459+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "QNVJXHqKCYcEJqw__BR_Debito_payments_accounting_report_2025_08_31.csv",
+            "rows": 320232,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 192.69592761993408,
+            "uploaded_at": "2025-09-01T08:05:54.195667+00:00",
+            "status_message": null
+        }
+    ],
+    "220506": [
+        {
+            "filename": "QNVJcHR5iYcEE6Q__BR_3DS_payments_accounting_report_2025_08_31.csv",
+            "rows": 70995,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 32.49528884887695,
+            "uploaded_at": "2025-09-01T08:04:24.000971+00:00",
+            "status_message": null
+        }
+    ],
+    "224602": [
+        {
+            "filename": "ItmLancamentos_pagamento_2025-08-31.csv",
+            "rows": 586930,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 643.3857288360596,
+            "uploaded_at": "2025-09-01T15:28:17.596985+00:00",
+            "status_message": null
+        }
+    ],
+    "224603": [
+        {
+            "filename": "ItmLancamentos_devolucao_2025-08-31.csv",
+            "rows": 20948,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 30.219043731689453,
+            "uploaded_at": "2025-09-01T12:09:39.331419+00:00",
+            "status_message": null
+        }
+    ],
+    "228036": [
+        {
+            "filename": "sale-payments-14380200000121-_-29082025030000-01092025030000.csv",
+            "rows": 1033631,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 361.85132694244385,
+            "uploaded_at": "2025-09-01T20:10:11.905752+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "sale-payments-14380200000121-anota-ai-29082025030000-01092025030000.csv",
+            "rows": 2107,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.7490243911743164,
+            "uploaded_at": "2025-09-01T20:10:10.817605+00:00",
+            "status_message": null
+        }
+    ],
+    "228038": [
+        {
+            "filename": "settlement-payments-14380200000121-_-01092025030000-02092025030000.csv",
+            "rows": 834260,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 314.7140302658081,
+            "uploaded_at": "2025-09-01T20:10:09.228444+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "settlement-payments-14380200000121-anota-ai-01092025030000-02092025030000.csv",
+            "rows": 1237,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.4837837219238281,
+            "uploaded_at": "2025-09-01T20:10:08.154683+00:00",
+            "status_message": null
+        }
+    ],
+    "239611": [
+        {
+            "filename": "sale-adjustments-14380200000121-_-29082025030000-01092025030000.csv",
+            "rows": 45835,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 12.695374488830566,
+            "uploaded_at": "2025-09-01T20:09:27.060812+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "sale-adjustments-14380200000121-anota-ai-29082025030000-01092025030000.csv",
+            "rows": 44,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.012541770935058594,
+            "uploaded_at": "2025-09-01T20:09:25.984069+00:00",
+            "status_message": null
+        }
+    ],
+    "239613": [
+        {
+            "filename": "settlement-adjustments-14380200000121-_-01092025030000-02092025030000.csv",
+            "rows": 42441,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 11.753440856933594,
+            "uploaded_at": "2025-09-01T20:09:29.461342+00:00",
+            "status_message": null
+        },
+        {
+            "filename": "settlement-adjustments-14380200000121-anota-ai-01092025030000-02092025030000.csv",
+            "rows": 26,
+            "status": "processed",
+            "is_duplicated": false,
+            "file_size": 0.0074977874755859375,
+            "uploaded_at": "2025-09-01T20:09:28.383661+00:00",
+            "status_message": null
+        }
+    ]
+}
